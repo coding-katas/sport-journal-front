@@ -5,4 +5,5 @@ export interface ExerciseSet {
   sets: number;
   reps: number;
  }
+
  export type ExerciseSetList = Array<ExerciseSet>;
