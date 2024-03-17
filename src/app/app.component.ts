@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { EntryItemComponent } from './journal/entry-item.component';
 import { ListEntriesComponent } from './journal/list-entries.component';
-import { ExerciseSetList, ExerciseSet } from './interfaces/exercise-set';
+import { ExerciseSet } from './interfaces/exercise-set';
 import { NewItemButtonComponent } from './journal/new-item-button.component';
-
+import { ExerciseSetsService } from './services/exercise-sets.service';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,7 @@ import { NewItemButtonComponent } from './journal/new-item-button.component';
     <div class="min-h-screen bg-gray-200">
         <header class="bg-blue-500 py-4 text-white">
             <div class="mx-auto max-w-6xl px-4">
-                <h1 class="text-2xl font-bold">Exercises de sport</h1>
+                <h1 class="text-2xl font-bold">Sport Workout</h1>
             </div>
         </header>
         <main class="mx-auto mt-8 max-w-6xl px-4">
@@ -40,33 +40,20 @@ import { NewItemButtonComponent } from './journal/new-item-button.component';
 })
 export class AppComponent {
   title = 'sport-journal';
-  exerciseList: ExerciseSetList = [
-    { id: '1', date: new Date(), exercise: 'Deadlift', reps: 15, sets: 3 },
-    { id: '2', date: new Date(), exercise: 'Squat', reps: 15, sets: 3 },
-    { id: '3', date: new Date(), exercise: 'Barbell row', reps: 15, sets: 3 },
-    ];
+  private exerciseSetsService = inject(ExerciseSetsService);
+  exerciseList = this.exerciseSetsService.getInitialList();
   newList() {
-    this.exerciseList = [
-    { id: '1', date: new Date(), exercise: 'Deadlift', reps: 15, sets: 3 },
-    { id: '2', date: new Date(), exercise: 'Squat', reps: 15, sets: 3 },
-    { id: '3', date: new Date(), exercise: 'Barbell row', reps: 15, sets: 3 },
-    { id: '4', date: new Date(), exercise: 'Leg Press', reps: 15, sets: 3 },
-    ];
+    this.exerciseList = this.exerciseSetsService.refreshList();
+  }
+  addExercise(newSet: ExerciseSet) {
+    this.exerciseList = this.exerciseSetsService.addNewItem(newSet);
   }
 
-  addExercise(newSet: ExerciseSet) {
-    this.exerciseList.push(newSet);
+  newRep(item: ExerciseSet) {
+    this.exerciseList = this.exerciseSetsService.addNewItem(item);
   }
 
   deleteItem(id: string) {
-    this.exerciseList = this.exerciseList.filter((item) => item.id !== id);
-  }
-
-  newRep(exerciseSet: ExerciseSet) {
-    const id = exerciseSet.id;
-    const i = this.exerciseList.findIndex((item) => item.id === id);
-    if (i >= 0) {
-      this.exerciseList[i] = { ...exerciseSet };
-    }
+    console.log('deleteItem', id);
   }
 }
