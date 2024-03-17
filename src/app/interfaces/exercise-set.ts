@@ -7,3 +7,9 @@ export interface ExerciseSet {
  }
 
  export type ExerciseSetList = Array<ExerciseSet>;
+
+
+ export interface ExerciseSetListAPI {
+  hasNext: boolean;
+  items: ExerciseSetList;
+ }

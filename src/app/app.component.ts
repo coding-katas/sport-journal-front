@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { EntryItemComponent } from './journal/entry-item.component';
 import { ListEntriesComponent } from './journal/list-entries.component';
-import { ExerciseSet } from './interfaces/exercise-set';
+import { ExerciseSet, ExerciseSetList } from './interfaces/exercise-set';
 import { NewItemButtonComponent } from './journal/new-item-button.component';
 import { ExerciseSetsService } from './services/exercise-sets.service';
 
@@ -41,19 +41,36 @@ import { ExerciseSetsService } from './services/exercise-sets.service';
 export class AppComponent {
   title = 'sport-journal';
   private exerciseSetsService = inject(ExerciseSetsService);
-  exerciseList = this.exerciseSetsService.getInitialList();
-  newList() {
-    this.exerciseList = this.exerciseSetsService.refreshList();
-  }
-  addExercise(newSet: ExerciseSet) {
-    this.exerciseList = this.exerciseSetsService.addNewItem(newSet);
+  exerciseList!: ExerciseSetList;
+
+  ngOnInit(): void {
+    this.exerciseSetsService
+      .getInitialList()
+      .subscribe((dataApi) => (this.exerciseList = dataApi.items));
   }
 
-  newRep(item: ExerciseSet) {
-    this.exerciseList = this.exerciseSetsService.addNewItem(item);
+  newList() {
+    this.exerciseSetsService
+      .refreshList()
+      .subscribe((dataApi) => (this.exerciseList = dataApi.items));
+  }
+
+  addExercise(newSet: ExerciseSet) {
+    this.exerciseSetsService.addNewItem(newSet).subscribe((exerciseSet) => {
+      this.exerciseList = [...this.exerciseList, exerciseSet];
+    });
   }
 
   deleteItem(id: string) {
-    console.log('deleteItem', id);
+    this.exerciseSetsService.deleteItem(id).subscribe(() => {
+      this.exerciseList = this.exerciseList.filter(
+        (exerciseSet) => exerciseSet.id !== id
+      );
+    });
+  }
+
+  newRep(updateSet: ExerciseSet) {
+    const id = updateSet.id ?? '';
+    this.exerciseSetsService.updateItem(id, updateSet).subscribe();
   }
 }
