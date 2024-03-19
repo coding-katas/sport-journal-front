@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global Styles */
+* {
+  padding: 0;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif; /* Include fallback font */
+}
+
+/* List Items */
+li {
+  list-style: none;
+}
+
+/* Links */
+a,
+a:visited {
+  color: white;
+  text-transform: uppercase;
+}
+
+a:hover {
+  color: orange;
+}
+
+
+/**** NAVBAR ****/
+nav {
+  background: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  font-size: calc(0.5rem + 1.5vw);
+}
+nav ul {
+  display: flex;
+  justify-content: space-between;
+  width: 50%;
+}
+#icons {
+  cursor: pointer;
+  display: none;
+}
+
+@media (max-width: 650px) {
+  #icons {
+    display: block;
+  }
+  #icons:before {
+    content: "\\2630";
+  }
+  #icons:hover {
+    color: orange;
+    background: black;
+  }
+  nav ul {
+    position: fixed;
+    left: 0%;
+    top: 5%;
+    flex-direction: column;
+    background: black;
+    width: 100%;
+    text-align: center;
+    transition: 0.25s;
+  }
+  nav li {
+    padding: 3px 0;
+  }
+  nav li:hover {
+    background: white;
+  }
+}
