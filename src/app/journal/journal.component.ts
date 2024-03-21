@@ -7,6 +7,7 @@ import { ExerciseSet, ExerciseSetList } from '../interfaces/exercise-set';
 import { NewItemButtonComponent } from './new-item-button.component';
 import { ExerciseSetsService } from '../services/exercise-sets.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -35,8 +36,20 @@ import { Router } from '@angular/router';
           >
             Server Sync
           </button>
+
+          <br />
+          <br />
+          <button
+            class="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+            (click)="logout()"
+          >
+            Logout
+          </button>
+
         </main>
     </div>
+
+
   `,
   styleUrls: ['./journal.component.css']
 })
@@ -46,6 +59,14 @@ export class JournalComponent {
   exerciseList!: ExerciseSetList;
 
   private router = inject(Router);
+
+  private authService = inject(AuthService);
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['']);
+  }
+
 
   ngOnInit(): void {
     this.exerciseSetsService
