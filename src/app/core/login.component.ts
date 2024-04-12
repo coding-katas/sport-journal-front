@@ -33,6 +33,7 @@ import { AuthService } from '../services/auth.service';
               class="bg-blue-500 text-white rounded px-4 py-2 w-full"
               [disabled]="loginForm.invalid"
               [class.opacity-50]="loginForm.invalid"
+              data-cy="submit"
               >Login</button>
             </div>
           </form>

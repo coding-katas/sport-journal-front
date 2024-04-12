@@ -8,17 +8,20 @@ import { NewItemButtonComponent } from './new-item-button.component';
 import { ExerciseSetsService } from '../services/exercise-sets.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @Component({
   selector: 'app-journal',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, EntryItemComponent, ListEntriesComponent, NewItemButtonComponent],
+  imports: [CommonModule, RouterOutlet, TranslateModule, EntryItemComponent, ListEntriesComponent, NewItemButtonComponent],
   template: `
     <div class="min-h-screen bg-gray-200">
         <header class="bg-blue-500 py-4 text-white">
             <div class="mx-auto max-w-6xl px-4">
-                <h1 class="text-2xl font-bold">Sport Workout</h1>
+              <h1 class="text-2xl font-bold">sport workout</h1>
             </div>
         </header>
         <main class="mx-auto mt-8 max-w-6xl px-4">
@@ -42,8 +45,22 @@ import { AuthService } from '../services/auth.service';
           <button
             class="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
             (click)="logout()"
+            data-cy="logout-menu"
           >
             Logout
+          </button>
+
+          <button
+            class="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+            (click)="changeLanguage('en')"
+          >
+            English
+          </button>
+          <button
+            class="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+            (click)="changeLanguage('fr')"
+          >
+            Français
           </button>
 
         </main>
@@ -60,6 +77,8 @@ export class JournalComponent {
 
   private router = inject(Router);
 
+//   private translateService = inject(TranslateService);
+
   private authService = inject(AuthService);
 
   logout() {
@@ -68,16 +87,26 @@ export class JournalComponent {
   }
 
 
+  private route = inject(ActivatedRoute);
+
+
   ngOnInit(): void {
     this.exerciseSetsService
       .getInitialList()
-      .subscribe((dataApi) => (this.exerciseList = dataApi.items));
+      .subscribe((exerciseList) => (this.exerciseList = exerciseList));
+
+    this.route.data.subscribe(({ exerciseList }) => {
+        this.exerciseList = exerciseList;
+      });
   }
 
   newList() {
     this.exerciseSetsService
+    .refreshList()
+    .subscribe((exerciseList) => (this.exerciseList = exerciseList));
+    /*this.exerciseSetsService
       .refreshList()
-      .subscribe((dataApi) => (this.exerciseList = dataApi.items));
+      .subscribe((dataApi) => (this.exerciseList = dataApi.items));*/
   }
 
   addExercise(newSet: ExerciseSet) {
@@ -98,5 +127,9 @@ export class JournalComponent {
   newRep(updateSet: ExerciseSet) {
     const id = updateSet.id ?? '';
     this.exerciseSetsService.updateItem(id, updateSet).subscribe();
+  }
+
+  changeLanguage(language: string) {
+//   this.translateService.use(language);
   }
 }

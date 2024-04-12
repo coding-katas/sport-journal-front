@@ -128,6 +128,7 @@ export class NewEntryFormReactiveComponent implements OnInit {
   private exerciseSetsService = inject(ExerciseSetsService);
   private router = inject(Router);
 
+
   ngOnInit() {
     this.entryForm = this.formBuilder.group({
       date: ['', Validators.required],
